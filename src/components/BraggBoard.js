@@ -45,9 +45,9 @@ const Braggboard = ({ongoingGame, mssgToJoinGame}) => {
         <div className="wrapper">
             <div className="winnersList">
             <div>
-                {winnersList.map(winners => {
+                {winnersList.map((winners, i) => {
                     return (
-                        <div class="winner_row">{winners.name}</div>
+                        <div key={i} className="winner_row">{winners.name}</div>
                     )
                 })}
             </div>

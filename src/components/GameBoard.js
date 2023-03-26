@@ -11,8 +11,8 @@ const Player = ({ name, active = false }) => {
 }
 
 
-const GameBoard = () => {
-    const [board, setboard] = useState([Array(3).fill(''), Array(3).fill(''), Array(3).fill('')]);
+const GameBoard = ({player1, player1Name, player2, player2Name, gameBoard = [Array(3).fill(''), Array(3).fill(''), Array(3).fill('')]}) => {
+    const [board, setboard] = useState(gameBoard);
     const [move, setmove] = useState('X');
     const [activePlayer, setactivePlayer] = useState('Player1');
 
@@ -39,7 +39,7 @@ const GameBoard = () => {
         setboard(newBoard);
         // change the active player
         activePlayer === 'Player1'? setactivePlayer('Player2'): setactivePlayer('Player1');
-        getInfoFromContract();
+        // getInfoFromContract();
     }
 
     async function getInfoFromContract(){
@@ -56,19 +56,24 @@ const GameBoard = () => {
                 </div>
                 <div className="play_arena">
                     <div>
-                        <Player name="Player1" active={activePlayer === 'Player1'}/>
+                        <Player name={player1Name} active={activePlayer === 'Player1'}/>
                     </div>
                     <div className="board">
                         {renderTicTacToeBoard(board)}
                     </div>
                     <div>
-                        <Player name="Player2" active={activePlayer === 'Player2'}/>
+                        <Player name={player2Name} active={activePlayer === 'Player2'}/>
                     </div>
                 </div>
             </div>
         </div>
+    )
+}
 
-        // <div className='game_board_wrapper'>
+export default GameBoard;
+
+
+  // <div className='game_board_wrapper'>
         //     Tic Tac Toe shall be played here
         //     <br/>
         //     <div className="tic_tac_toe">
@@ -89,7 +94,3 @@ const GameBoard = () => {
         //     </div>
         //     </div>
         // </div>
-    )
-}
-
-export default GameBoard;

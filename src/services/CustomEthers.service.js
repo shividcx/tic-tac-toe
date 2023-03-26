@@ -3,30 +3,116 @@ import { ethers } from "ethers";
 let provider = null;
 let contract = null;
 
-const CONTRACT_ADDRESS = '0xFb05E0B89916CA1Eb6a5A0e1B0113664805D3867';
-const CONTRACT_ABI = [
+const CONTRACT_ADDRESS = '0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e';
+const CONTRACT_ABI =  [
     {
+        "anonymous": false,
         "inputs": [
             {
-                "internalType": "string",
-                "name": "candidateName",
-                "type": "string"
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "_gameid",
+                "type": "uint256"
             }
         ],
-        "name": "addCandidate",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        "name": "GameCreated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "_gameid",
+                "type": "uint256"
+            }
+        ],
+        "name": "GameDraw",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "_gameid",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "_turn",
+                "type": "address"
+            }
+        ],
+        "name": "GameStarted",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "_gameid",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "r",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "c",
+                "type": "uint256"
+            }
+        ],
+        "name": "Move",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "_gameid",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "winner",
+                "type": "address"
+            }
+        ],
+        "name": "WinnerDecleared",
+        "type": "event"
     },
     {
         "inputs": [
             {
                 "internalType": "address",
-                "name": "_voter",
+                "name": "_paytoken",
                 "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_betamount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_timelimit",
+                "type": "uint256"
             }
         ],
-        "name": "addVoter",
+        "name": "addRoomType",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -39,37 +125,124 @@ const CONTRACT_ABI = [
                 "type": "uint256"
             }
         ],
-        "name": "candidates",
+        "name": "games",
         "outputs": [
             {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "currentLeadingCandidate",
-        "outputs": [
+                "internalType": "address",
+                "name": "player1",
+                "type": "address"
+            },
             {
                 "internalType": "string",
-                "name": "",
+                "name": "player1Name",
                 "type": "string"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "electionStarted",
-        "outputs": [
+            },
+            {
+                "internalType": "address",
+                "name": "player2",
+                "type": "address"
+            },
+            {
+                "internalType": "string",
+                "name": "player2Name",
+                "type": "string"
+            },
+            {
+                "internalType": "address",
+                "name": "turn",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "deadline",
+                "type": "uint256"
+            },
             {
                 "internalType": "bool",
-                "name": "",
+                "name": "isRunning",
+                "type": "bool"
+            },
+            {
+                "internalType": "uint256",
+                "name": "roomInfo",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "balance",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_address",
+                "type": "address"
+            }
+        ],
+        "name": "getActiveGameId",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_gameId",
+                "type": "uint256"
+            }
+        ],
+        "name": "getGame",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "player1",
+                "type": "address"
+            },
+            {
+                "internalType": "string",
+                "name": "player1Name",
+                "type": "string"
+            },
+            {
+                "internalType": "address",
+                "name": "player2",
+                "type": "address"
+            },
+            {
+                "internalType": "string",
+                "name": "player2Name",
+                "type": "string"
+            },
+            {
+                "internalType": "address",
+                "name": "turn",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256[3][3]",
+                "name": "board",
+                "type": "uint256[3][3]"
+            },
+            {
+                "internalType": "uint256",
+                "name": "deadline",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "isRunning",
                 "type": "bool"
             }
         ],
@@ -77,19 +250,28 @@ const CONTRACT_ABI = [
         "type": "function"
     },
     {
-        "inputs": [],
-        "name": "endElection",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "getCandidateCount",
-        "outputs": [
+        "inputs": [
             {
                 "internalType": "uint256",
-                "name": "",
+                "name": "_roomid",
+                "type": "uint256"
+            }
+        ],
+        "name": "getRoomInfo",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "_payToken",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_betAmount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_timelimit",
                 "type": "uint256"
             }
         ],
@@ -98,96 +280,131 @@ const CONTRACT_ABI = [
     },
     {
         "inputs": [],
+        "name": "getRoomTypeCount",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "count",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_gameId",
+                "type": "uint256"
+            }
+        ],
         "name": "getWinner",
         "outputs": [
             {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
+                "internalType": "address",
+                "name": "_winner",
+                "type": "address"
             }
         ],
         "stateMutability": "view",
         "type": "function"
     },
     {
-        "inputs": [],
-        "name": "maxVoteCount",
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_gameId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "_player",
+                "type": "address"
+            }
+        ],
+        "name": "isWinner",
         "outputs": [
+            {
+                "internalType": "bool",
+                "name": "winner",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_roomid",
+                "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "_name",
+                "type": "string"
+            }
+        ],
+        "name": "joinGame",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_gameId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_r",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_c",
+                "type": "uint256"
+            }
+        ],
+        "name": "play",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
             {
                 "internalType": "uint256",
                 "name": "",
                 "type": "uint256"
             }
         ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "restartElection",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "startElection",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
+        "name": "roomInfo",
+        "outputs": [
             {
-                "internalType": "string",
-                "name": "candidateName",
-                "type": "string"
-            }
-        ],
-        "name": "vote",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "",
+                "internalType": "contract IERC20",
+                "name": "payToken",
                 "type": "address"
-            }
-        ],
-        "name": "voted",
-        "outputs": [
-            {
-                "internalType": "uint8",
-                "name": "",
-                "type": "uint8"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-            }
-        ],
-        "name": "votes",
-        "outputs": [
+            },
             {
                 "internalType": "uint256",
-                "name": "",
+                "name": "betAmount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "timelimit",
                 "type": "uint256"
             }
         ],
         "stateMutability": "view",
         "type": "function"
     }
-];
+]
 /**
  * we will get access to provider and contract in all the components without reinitialization
  */
