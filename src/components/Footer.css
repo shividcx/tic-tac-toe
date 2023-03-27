@@ -4,5 +4,7 @@
     width: 100%;
     text-align: center;
     padding: 12px;
-    background-color: wheat;
+    /* background-color: wheat; */
+    background-color: #fa4a29;
+    color: white;
 }

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import {getContract} from '../services/CustomEthers.service';
+import { useState, useEffect, useLayoutEffect } from 'react';
+import {getContract, getProvider} from '../services/CustomEthers.service';
 import { ethers } from "ethers";
 
 import './GameBoard.css';
@@ -11,10 +11,18 @@ const Player = ({ name, active = false }) => {
 }
 
 
-const GameBoard = ({player1, player1Name, player2, player2Name, gameBoard = [Array(3).fill(''), Array(3).fill(''), Array(3).fill('')]}) => {
+const GameBoard = ({player1, player1Name, player2, player2Name, gameBoard = [Array(3).fill(''), Array(3).fill(''), Array(3).fill('')], primaryPlayer, turn}) => {
     const [board, setboard] = useState(gameBoard);
     const [move, setmove] = useState('X');
-    const [activePlayer, setactivePlayer] = useState('Player1');
+    const [activePlayer, setactivePlayer] = useState('');
+
+    useEffect(() => {
+     if(turn === primaryPlayer){
+        primaryPlayer === player1 ? setactivePlayer('Player1'): setactivePlayer('Player2');
+     }
+
+    }, [])
+    
 
     function renderTicTacToeBoard(arr) {
         return (
@@ -32,20 +40,18 @@ const GameBoard = ({player1, player1Name, player2, player2Name, gameBoard = [Arr
     }
 
     function handleClick(row, col){
-        if(board[row][col]) return;
+        console.log('comparing::', turn === primaryPlayer);
+        if(board[row][col] || Number(turn) != Number(primaryPlayer)) return;
+
+        const contract = getContract();
+        contract.play(0, row, col);
+
         let newBoard = [...board];
         newBoard[row][col] = move;
         move === 'X'? setmove('O'): setmove('X');
         setboard(newBoard);
         // change the active player
         activePlayer === 'Player1'? setactivePlayer('Player2'): setactivePlayer('Player1');
-        // getInfoFromContract();
-    }
-
-    async function getInfoFromContract(){
-        const contract = getContract();
-        let count = await contract.getCandidateCount();
-        console.log('the count is::', count);
     }
 
     return (

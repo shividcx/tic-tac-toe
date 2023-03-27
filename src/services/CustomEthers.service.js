@@ -3,8 +3,13 @@ import { ethers } from "ethers";
 let provider = null;
 let contract = null;
 
-const CONTRACT_ADDRESS = '0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e';
-const CONTRACT_ABI =  [
+const CONTRACT_ADDRESS = '0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44';
+const CONTRACT_ABI = [
+    {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
     {
         "anonymous": false,
         "inputs": [
@@ -13,6 +18,12 @@ const CONTRACT_ABI =  [
                 "internalType": "uint256",
                 "name": "_gameid",
                 "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "creator",
+                "type": "address"
             }
         ],
         "name": "GameCreated",
@@ -43,6 +54,18 @@ const CONTRACT_ABI =  [
             {
                 "indexed": false,
                 "internalType": "address",
+                "name": "player1",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "player2",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
                 "name": "_turn",
                 "type": "address"
             }
@@ -58,6 +81,12 @@ const CONTRACT_ABI =  [
                 "internalType": "uint256",
                 "name": "_gameid",
                 "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "playedBy",
+                "type": "address"
             },
             {
                 "indexed": false,
@@ -179,25 +208,6 @@ const CONTRACT_ABI =  [
     {
         "inputs": [
             {
-                "internalType": "address",
-                "name": "_address",
-                "type": "address"
-            }
-        ],
-        "name": "getActiveGameId",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "id",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
                 "internalType": "uint256",
                 "name": "_gameId",
                 "type": "uint256"
@@ -244,6 +254,11 @@ const CONTRACT_ABI =  [
                 "internalType": "bool",
                 "name": "isRunning",
                 "type": "bool"
+            },
+            {
+                "internalType": "uint256",
+                "name": "balance",
+                "type": "uint256"
             }
         ],
         "stateMutability": "view",
@@ -285,6 +300,25 @@ const CONTRACT_ABI =  [
             {
                 "internalType": "uint256",
                 "name": "count",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_address",
+                "type": "address"
+            }
+        ],
+        "name": "getUserActiveGame",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "id",
                 "type": "uint256"
             }
         ],
@@ -399,6 +433,16 @@ const CONTRACT_ABI =  [
                 "internalType": "uint256",
                 "name": "timelimit",
                 "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "game",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "watingForPlayer",
+                "type": "bool"
             }
         ],
         "stateMutability": "view",

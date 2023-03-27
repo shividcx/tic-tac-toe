@@ -27,7 +27,9 @@ function MetamaskNew() {
     function renderMetamask() {
         if (!primaryPlayer) {
             return (
-                <button onClick={() => connectToMetamask()}>Connect to Metamask</button>
+                <div className="join-btn-wrapper">
+                    <button className="btn" onClick={() => connectToMetamask()}>Connect to Metamask</button>
+                </div>
             )
         } else {
             return (
