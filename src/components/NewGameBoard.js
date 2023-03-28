@@ -56,7 +56,8 @@ const NewGameBoard = ({ gameId, primaryPlayer, player1, player2, player1Name, pl
 
     async function handleTurn(row, col){
         if(turn?.toLowerCase()!==primaryPlayer || board[row][col]) return;
-        await contract.play(parseInt(gameId)-1, row, col);
+        let moveTx = await contract.play(parseInt(gameId)-1, row, col);
+        console.log('moveTx::', moveTx);
     }
 
     function renderTicTacToeBoard(arr) {
@@ -78,7 +79,7 @@ const NewGameBoard = ({ gameId, primaryPlayer, player1, player2, player1Name, pl
         <div className='game_board_wrapper'>
             <div className="tic_tac_toe">
                 <div className="Header">
-                    Playing Tic Tac Toe
+                    Tic Tac Toe
                 </div>
                 <div className="play_arena">
                     <div>

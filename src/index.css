@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100vh;
 }
 
 code {
@@ -15,7 +16,7 @@ code {
 .btn{
   margin-top: 20%;
   padding: 15px 30px;
-  background-color: #fa4a29;
+  background-color: #14bdac;
   color: white;
   border: none;
 }
