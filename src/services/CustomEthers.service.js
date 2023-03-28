@@ -3,13 +3,8 @@ import { ethers } from "ethers";
 let provider = null;
 let contract = null;
 
-const CONTRACT_ADDRESS = '0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44';
-const CONTRACT_ABI = [
-    {
-        "inputs": [],
-        "stateMutability": "nonpayable",
-        "type": "constructor"
-    },
+const CONTRACT_ADDRESS = '0x1a6a3e7Bb246158dF31d8f924B84D961669Ba4e5';
+const CONTRACT_ABI =[
     {
         "anonymous": false,
         "inputs": [
@@ -120,6 +115,38 @@ const CONTRACT_ABI = [
                 "type": "address"
             }
         ],
+        "name": "PrizeClaimed",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "_roomId",
+                "type": "uint256"
+            }
+        ],
+        "name": "RoomAdded",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "_gameid",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "winner",
+                "type": "address"
+            }
+        ],
         "name": "WinnerDecleared",
         "type": "event"
     },
@@ -150,59 +177,13 @@ const CONTRACT_ABI = [
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "",
+                "name": "_gameId",
                 "type": "uint256"
             }
         ],
-        "name": "games",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "player1",
-                "type": "address"
-            },
-            {
-                "internalType": "string",
-                "name": "player1Name",
-                "type": "string"
-            },
-            {
-                "internalType": "address",
-                "name": "player2",
-                "type": "address"
-            },
-            {
-                "internalType": "string",
-                "name": "player2Name",
-                "type": "string"
-            },
-            {
-                "internalType": "address",
-                "name": "turn",
-                "type": "address"
-            },
-            {
-                "internalType": "uint256",
-                "name": "deadline",
-                "type": "uint256"
-            },
-            {
-                "internalType": "bool",
-                "name": "isRunning",
-                "type": "bool"
-            },
-            {
-                "internalType": "uint256",
-                "name": "roomInfo",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "balance",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
+        "name": "claimPrize",
+        "outputs": [],
+        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
@@ -295,7 +276,7 @@ const CONTRACT_ABI = [
     },
     {
         "inputs": [],
-        "name": "getRoomTypeCount",
+        "name": "getRoomsCount",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -318,7 +299,7 @@ const CONTRACT_ABI = [
         "outputs": [
             {
                 "internalType": "uint256",
-                "name": "id",
+                "name": "_gameId",
                 "type": "uint256"
             }
         ],
@@ -407,45 +388,6 @@ const CONTRACT_ABI = [
         "name": "play",
         "outputs": [],
         "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "roomInfo",
-        "outputs": [
-            {
-                "internalType": "contract IERC20",
-                "name": "payToken",
-                "type": "address"
-            },
-            {
-                "internalType": "uint256",
-                "name": "betAmount",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "timelimit",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "game",
-                "type": "uint256"
-            },
-            {
-                "internalType": "bool",
-                "name": "watingForPlayer",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "view",
         "type": "function"
     }
 ]
