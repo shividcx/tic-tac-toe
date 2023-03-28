@@ -3,7 +3,7 @@ import './Footer.css';
 const Footer = () =>{
     return (
         <div className='footer'>
-            Made in love with CoinDCX!
+            Made with love in CoinDCX!
         </div>
     )
 }
